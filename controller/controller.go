@@ -47,13 +47,20 @@ func addNew(w http.ResponseWriter, r *http.Request)  {
 	fmt.Fprintf(w , "The New added Names is : %s and Aaadhar is : %d \n " , dir[x-1].Name , dir[x-1].Aadhar)
 }
 
+func DeleteNew(w http.ResponseWriter, r *http.Request)  {
+	dir   = *directory.DeleteEntry(dir)
+	logger.Info("You have hit the Delete name page endpoint ")	
+	fmt.Fprintf(w , "The Last Name was deleted and number of entries are is : %d \n " , len(dir))
+}
+
+
 func InitHandlers()  {
 	r := mux.NewRouter()
 	r.HandleFunc("/",homepage)
 	r.HandleFunc("/showName",printName)
 	r.HandleFunc("/sd",sidepage)
 	r.HandleFunc("/addNew",addNew)
-	
+	r.HandleFunc("/del",DeleteNew)
 	logger.Sugar().Error(http.ListenAndServe("localhost:3030",r) , zap.Error(errors.New("unable to serve at localhost:3030")))
 	
 	//logger.DPanic(http.ListenAndServe("localhost:3030",r) , zap.Error(errors.New("unable to serve at localhost:3030")))

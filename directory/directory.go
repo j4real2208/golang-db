@@ -20,6 +20,15 @@ func  AddNewEntry(dirs []Directory) (*[]Directory )  {
 	return &dirs
 }
 
+func  DeleteEntry(dirs []Directory) (*[]Directory )  {
+	
+	dirs = dirs[:len(dirs)-1]	
+	return &dirs
+}
+
+
+
+
 func Initdirectory() *[]Directory {
 	entry := Directory{autoname.Generate(),int64(uuid.New().ID()) }
 	dir := []Directory{entry,}
