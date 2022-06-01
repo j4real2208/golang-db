@@ -7,8 +7,8 @@ import (
 
 
 type Directory struct {
-	Name string
-	Aadhar int64 
+	Name string 	`db:"name"`
+	Aadhar int64 	`db:"aadhar_id"`
 
 }
 
