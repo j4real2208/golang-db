@@ -32,7 +32,7 @@ func PrintName(w http.ResponseWriter, r *http.Request )  {
 	var displayString string = ""
 	for _, v := range dir {
 
-		displayString += "The name is : " + v.Name + "and  the Aadhar Number is " + strconv.Itoa(int(v.Aadhar)) +"\n"
+		displayString += "The cust id is : "+ strconv.Itoa(int(v.Customer_id))+ "name is : " + v.Name + "and  the Aadhar Number is " + strconv.Itoa(int(v.Aadhar)) +"\n"
 
 	}
 	fmt.Fprintf(w , "The list of Names are \n  %s  " , displayString)	

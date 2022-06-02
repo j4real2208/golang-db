@@ -45,7 +45,8 @@ func InitHandlers()  {
 	r.HandleFunc("/AddDb",dbHandler.AddDb)
 	r.HandleFunc("/usr/{aadhar_id:[0-9]+}", dbHandler.UserGetByID).Methods(http.MethodGet)
 	r.HandleFunc("/usr/{name:[a-zA-Z]+}", dbHandler.UserGetByName).Methods(http.MethodGet)
-	r.HandleFunc("/usr/{name:[a-zA-Z]+}/{aadhar_id:[0-9]+}", dbHandler.AddNewUserWeb).Methods(http.MethodGet)	
+	r.HandleFunc("/usr/{name:[a-zA-Z]+}/{aadhar_id:[0-9]+}", dbHandler.AddNewUserWeb).Methods(http.MethodGet)
+	r.HandleFunc("/cust/{customer_id}",dbHandler.NewIdQueryMem).Methods(http.MethodGet)	
 	
 	addr := os.Getenv("SERVER_ADDRESS")
 	prt := os.Getenv("SERVER_PORT")

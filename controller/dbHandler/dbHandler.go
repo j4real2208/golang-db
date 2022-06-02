@@ -13,11 +13,15 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/j4real2208/golang-db/directory"
+	"github.com/j4real2208/golang-db/memcached"
 
 	"github.com/jmoiron/sqlx"
 )
 
 var Db *sqlx.DB = getDbClient()
+var mc, newError  = memcached.IntializeMEM()
+
+
 
 
 
@@ -25,7 +29,7 @@ func ShowDb(w http.ResponseWriter, r *http.Request){
 	var newdir  []directory.Directory
 	Db.Select(&newdir,"SELECT * from person")
 	for _, v := range newdir {
-		fmt.Fprintf(w , "The name is :  %s and  the Aadhar Number is : %d \n",v.Name,v.Aadhar)
+		fmt.Fprintf(w , "The cust id is %d name is :  %s and  the Aadhar Number is : %d \n",v.Customer_id,v.Name,v.Aadhar)
 	}
 }
 func AddDb(w http.ResponseWriter, r *http.Request  ){
@@ -74,6 +78,52 @@ func AddNewUserWeb(w http.ResponseWriter, r *http.Request){
 }
 
 
+func NewIdQueryMem(w http.ResponseWriter, r *http.Request){
+
+
+/*
+
+23:03:40.036678 +0530 IST m=+1.714738637 
+23:03:40.042969 +0530 IST m=+1.721029868
+
+Net Time Taken for db recovery of data --> .042969 - 036678 = .006291 
+
+23:03:47.30516 +0530 IST m=+8.983037492 
+23:03:47.305175 +0530 IST m=+8.983052910 --> .305175 - .30516 = 0.000015 
+
+Net Time Taken for db recovery of data --> .305175 - .30516 = 0.000015 
+
+On an apprrox 420x better in our current  evaluation 
+
+ */
+
+	
+	id := mux.Vars(r)["customer_id"]		
+	
+	//fmt.Printf()
+	val , err := mc.GetName(id)	
+
+	fmt.Fprintf(w," Start time stamp %v \n",time.Now())
+
+	if err == nil {
+		 
+		fmt.Fprintf(w , "The cust_id %d name from Memchached is :  %s and %d  And time taken is  %v \n ",val.Customer_id, val.Name ,val.Aadhar , time.Now() )
+	}
+
+	var newUser directory.Directory	
+	Db.Get(&newUser,"SELECT * FROM person where customer_id = ?" , id)
+	
+	fmt.Fprintf(w , "The cust_id %d name from DB is :  %s and %d And time taken is  %v \n ",newUser.Customer_id, newUser.Name ,newUser.Aadhar , time.Now() )
+
+	_ = mc.SetName(newUser)
+
+}
+
+
+
+
+
+
 func getDbClient() *sqlx.DB{
 	dbUser := os.Getenv("DB_USER")
 	dbPasswd := os.Getenv("DB_PASSWD")
@@ -93,3 +143,16 @@ func getDbClient() *sqlx.DB{
 	client.SetMaxIdleConns(10)
 	return client
 }
+
+
+
+/*
+
+23:03:40.036678 +0530 IST m=+1.714738637 
+23:03:40.042969 +0530 IST m=+1.721029868
+
+23:03:47.30516 +0530 IST m=+8.983037492 
+23:03:47.305175 +0530 IST m=+8.983052910 
+
+
+ */
