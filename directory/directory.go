@@ -7,8 +7,10 @@ import (
 
 
 type Directory struct {
+	Customer_id int64 	`db:"customer_id"`
 	Name string 	`db:"name"`
 	Aadhar int64 	`db:"aadhar_id"`
+
 
 }
 
@@ -16,7 +18,7 @@ type Directory struct {
 func  AddNewEntry(dirs []Directory) (*[]Directory )  {
 	name := autoname.Generate()
 	id := int64(uuid.New().ID())
-	dirs = append(dirs,Directory{name ,id } )	
+	dirs = append(dirs,Directory{id+2,name ,id  } )	
 	return &dirs
 }
 
@@ -30,11 +32,11 @@ func  DeleteEntry(dirs []Directory) (*[]Directory )  {
 
 
 func Initdirectory() *[]Directory {
-	entry := Directory{autoname.Generate(),int64(uuid.New().ID()) }
+	entry := Directory{int64(uuid.New().ID())+3 , autoname.Generate(),int64(uuid.New().ID()) }
 	dir := []Directory{entry,}
 	
 	for x:=0 ;x<10 ; x++ {
-		dir = append(dir, Directory{autoname.Generate(),int64(uuid.New().ID())}) 
+		dir = append(dir, Directory{int64(uuid.New().ID())+11 ,autoname.Generate(),int64(uuid.New().ID())}) 
 	}
 	
 	return &dir
