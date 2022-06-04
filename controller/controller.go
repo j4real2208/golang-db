@@ -10,6 +10,7 @@ import (
 
 	"github.com/gorilla/mux"
 	dbHandler "github.com/j4real2208/golang-db/controller/dbHandler"
+	"github.com/j4real2208/golang-db/controller/memhandler"
 	oldhandler "github.com/j4real2208/golang-db/controller/oldHandler"
 	"github.com/j4real2208/golang-db/error"
 
@@ -17,7 +18,7 @@ import (
 )
 
 
-var logger *zap.Logger = error.Getlogger()
+var logger *zap.Logger = error.Logger
 
 
 func sanityCheck()  {
@@ -46,7 +47,11 @@ func InitHandlers()  {
 	r.HandleFunc("/usr/{aadhar_id:[0-9]+}", dbHandler.UserGetByID).Methods(http.MethodGet)
 	r.HandleFunc("/usr/{name:[a-zA-Z]+}", dbHandler.UserGetByName).Methods(http.MethodGet)
 	r.HandleFunc("/usr/{name:[a-zA-Z]+}/{aadhar_id:[0-9]+}", dbHandler.AddNewUserWeb).Methods(http.MethodGet)
-	r.HandleFunc("/cust/{customer_id}",dbHandler.NewIdQueryMem).Methods(http.MethodGet)	
+	
+	
+	
+	//Memcached Handlers 
+	r.HandleFunc("/cust/{customer_id}",memhandler.NewIdQueryMem).Methods(http.MethodGet)	
 	
 	addr := os.Getenv("SERVER_ADDRESS")
 	prt := os.Getenv("SERVER_PORT")

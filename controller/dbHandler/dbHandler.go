@@ -13,13 +13,14 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/j4real2208/golang-db/directory"
+	"github.com/j4real2208/golang-db/error"
 	"github.com/j4real2208/golang-db/memcached"
 
 	"github.com/jmoiron/sqlx"
 )
 
 var Db *sqlx.DB = getDbClient()
-var mc, newError  = memcached.IntializeMEM()
+var Mc, newError  = memcached.IntializeMEM()
 
 
 
@@ -98,10 +99,12 @@ On an apprrox 420x better in our current  evaluation
  */
 
 	
+	error.Logger.Info(newError.Error())
+
 	id := mux.Vars(r)["customer_id"]		
 	
 	//fmt.Printf()
-	val , err := mc.GetName(id)	
+	val , err := Mc.GetName(id)	
 
 	fmt.Fprintf(w," Start time stamp %v \n",time.Now())
 
@@ -115,7 +118,7 @@ On an apprrox 420x better in our current  evaluation
 	
 	fmt.Fprintf(w , "The cust_id %d name from DB is :  %s and %d And time taken is  %v \n ",newUser.Customer_id, newUser.Name ,newUser.Aadhar , time.Now() )
 
-	_ = mc.SetName(newUser)
+	_ = Mc.SetName(newUser)
 
 }
 

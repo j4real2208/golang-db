@@ -14,7 +14,7 @@ import (
 
 
 
-var logger = newError.Getlogger()
+
 
 type Client struct {
 	client *memcache.Client
@@ -24,12 +24,14 @@ func IntializeMEM() (*Client , error){
 	client := memcache.New(os.Getenv("MEMCACHED"))
 
 	if err := client.Ping(); err != nil {
+		newError.Logger.Info("Memcache not connection established .. ")
+
 		return nil, err
 	}
 	
 	client.Timeout = 100 * time.Millisecond
 	client.MaxIdleConns = 100
-	logger.Info("Memcache connection established .. ")
+	newError.Logger.Info("Memcache connection established .. ")
 	return &Client{
 		client: client,
 	},nil

@@ -9,7 +9,7 @@ func main() {
 	logger := error.Getlogger()
 
 	logger.Info("Welcome to pre-setup of Dev Site")
-
+	error.Logger.Info("Starting Up Logger variable in Dev App")
 	controller.InitHandlers()
 
 	logger.Info("Closing of Dev Site")
